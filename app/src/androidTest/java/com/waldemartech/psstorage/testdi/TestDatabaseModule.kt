@@ -20,10 +20,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import com.waldemartech.psstorage.data.BookRepository
-import com.waldemartech.psstorage.data.di.DataModule
-import com.waldemartech.psstorage.data.di.FakeBookRepository
 
+/*
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
@@ -36,3 +34,4 @@ interface FakeDataModule {
         fakeRepository: FakeBookRepository
     ): BookRepository
 }
+*/

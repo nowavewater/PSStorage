@@ -23,12 +23,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import com.waldemartech.psstorage.data.local.database.Book
+/*import com.waldemartech.psstorage.data.local.database.Book
 import com.waldemartech.psstorage.data.local.database.BookDao
 
-/**
+*//**
  * Unit tests for [DefaultBookRepository].
- */
+ *//*
 @OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
 class DefaultBookRepositoryTest {
 
@@ -54,4 +54,4 @@ private class FakeBookDao : BookDao {
     override suspend fun insertBook(item: Book) {
         data.add(0, item)
     }
-}
+}*/

@@ -2,21 +2,175 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cc37b5f856c282f81e977c1fe5d57a9e",
+    "identityHash": "3de44136b73bb1daf0f3e14c328b724f",
     "entities": [
       {
-        "tableName": "Book",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "tableName": "deal",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`dealId` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `localizedName` TEXT NOT NULL, `storeIdInDeal` TEXT NOT NULL, PRIMARY KEY(`dealId`))",
         "fields": [
+          {
+            "fieldPath": "dealId",
+            "columnName": "dealId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localizedName",
+            "columnName": "localizedName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeIdInDeal",
+            "columnName": "storeIdInDeal",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "dealId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "current_deal",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`currentDealId` TEXT NOT NULL, `storeIdInCurrentDeal` TEXT NOT NULL, PRIMARY KEY(`currentDealId`))",
+        "fields": [
+          {
+            "fieldPath": "currentDealId",
+            "columnName": "currentDealId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeIdInCurrentDeal",
+            "columnName": "storeIdInCurrentDeal",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "currentDealId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "platform",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`platformId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "platformId",
+            "columnName": "platformId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
             "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "platformId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_platform_name",
+            "unique": true,
+            "columnNames": [
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_platform_name` ON `${TABLE_NAME}` (`name`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "price_history",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`productIdPriceRef` TEXT NOT NULL, `dealIdPriceRef` TEXT NOT NULL, `unit` TEXT NOT NULL, `basePrice` REAL NOT NULL, `discountedPrice` REAL NOT NULL, `discountText` TEXT NOT NULL, `isFree` INTEGER NOT NULL, `isExclusive` INTEGER NOT NULL, `isTiedToSubscription` INTEGER NOT NULL, `storeIdInPriceHistory` TEXT NOT NULL, `priceHistoryId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "productIdPriceRef",
+            "columnName": "productIdPriceRef",
+            "affinity": "TEXT",
+            "notNull": true
           },
           {
-            "fieldPath": "uid",
-            "columnName": "uid",
+            "fieldPath": "dealIdPriceRef",
+            "columnName": "dealIdPriceRef",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unit",
+            "columnName": "unit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "basePrice",
+            "columnName": "basePrice",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "discountedPrice",
+            "columnName": "discountedPrice",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "discountText",
+            "columnName": "discountText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFree",
+            "columnName": "isFree",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isExclusive",
+            "columnName": "isExclusive",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isTiedToSubscription",
+            "columnName": "isTiedToSubscription",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeIdInPriceHistory",
+            "columnName": "storeIdInPriceHistory",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "priceHistoryId",
+            "columnName": "priceHistoryId",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -24,7 +178,159 @@
         "primaryKey": {
           "autoGenerate": true,
           "columnNames": [
-            "uid"
+            "priceHistoryId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_price_history_productIdPriceRef_dealIdPriceRef",
+            "unique": true,
+            "columnNames": [
+              "productIdPriceRef",
+              "dealIdPriceRef"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_price_history_productIdPriceRef_dealIdPriceRef` ON `${TABLE_NAME}` (`productIdPriceRef`, `dealIdPriceRef`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "product",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`productId` TEXT NOT NULL, `name` TEXT NOT NULL, `typeName` TEXT NOT NULL, `npTitleId` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `localizedDisplayClassification` TEXT NOT NULL, `storeDisplayClassification` TEXT NOT NULL, `storeIdInProduct` TEXT NOT NULL, PRIMARY KEY(`productId`))",
+        "fields": [
+          {
+            "fieldPath": "productId",
+            "columnName": "productId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "typeName",
+            "columnName": "typeName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "npTitleId",
+            "columnName": "npTitleId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localizedDisplayClassification",
+            "columnName": "localizedDisplayClassification",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeDisplayClassification",
+            "columnName": "storeDisplayClassification",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeIdInProduct",
+            "columnName": "storeIdInProduct",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "productId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ProductPlatformCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`productId` TEXT NOT NULL, `platformId` INTEGER NOT NULL, PRIMARY KEY(`productId`, `platformId`))",
+        "fields": [
+          {
+            "fieldPath": "productId",
+            "columnName": "productId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "platformId",
+            "columnName": "platformId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "productId",
+            "platformId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "favorite_product",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`favoriteProductId` TEXT NOT NULL, `storeIdInFavoriteProduct` TEXT NOT NULL, PRIMARY KEY(`favoriteProductId`))",
+        "fields": [
+          {
+            "fieldPath": "favoriteProductId",
+            "columnName": "favoriteProductId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeIdInFavoriteProduct",
+            "columnName": "storeIdInFavoriteProduct",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "favoriteProductId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ignored_product",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ignoredProductId` TEXT NOT NULL, `storeIdInIgnoredProduct` TEXT NOT NULL, PRIMARY KEY(`ignoredProductId`))",
+        "fields": [
+          {
+            "fieldPath": "ignoredProductId",
+            "columnName": "ignoredProductId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeIdInIgnoredProduct",
+            "columnName": "storeIdInIgnoredProduct",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "ignoredProductId"
           ]
         },
         "indices": [],
@@ -34,7 +340,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cc37b5f856c282f81e977c1fe5d57a9e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3de44136b73bb1daf0f3e14c328b724f')"
     ]
   }
 }

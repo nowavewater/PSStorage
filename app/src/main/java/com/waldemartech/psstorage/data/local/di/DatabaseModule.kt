@@ -18,13 +18,18 @@ package com.waldemartech.psstorage.data.local.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import com.waldemartech.psstorage.data.local.database.AppDatabase
-import com.waldemartech.psstorage.data.local.database.BookDao
+import com.waldemartech.psstorage.data.local.database.dao.DealDao
+import com.waldemartech.psstorage.data.local.database.dao.PlatformDao
+import com.waldemartech.psstorage.data.local.database.dao.PriceDao
+import com.waldemartech.psstorage.data.local.database.dao.ProductDao
 import javax.inject.Singleton
 
 
@@ -32,8 +37,23 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
     @Provides
-    fun provideBookDao(appDatabase: AppDatabase): BookDao {
-        return appDatabase.bookDao()
+    fun provideDealDao(appDatabase: AppDatabase): DealDao {
+        return appDatabase.dealDao()
+    }
+
+    @Provides
+    fun providePlatformDao(appDatabase: AppDatabase): PlatformDao {
+        return appDatabase.platformDao()
+    }
+
+    @Provides
+    fun providePriceDao(appDatabase: AppDatabase): PriceDao {
+        return appDatabase.priceDao()
+    }
+
+    @Provides
+    fun provideProductDao(appDatabase: AppDatabase): ProductDao {
+        return appDatabase.productDao()
     }
 
     @Provides
@@ -42,7 +62,7 @@ class DatabaseModule {
         return Room.databaseBuilder(
             appContext,
             AppDatabase::class.java,
-            "Book"
+            "ps_store"
         ).build()
     }
 }

@@ -18,10 +18,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.gradle)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         applicationId = "com.waldemartech.psstorage"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -90,13 +90,15 @@ dependencies {
 
     // Hilt Dependency Injection
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     // Hilt and instrumented tests.
     androidTestImplementation(libs.hilt.android.testing)
-    kaptAndroidTest(libs.hilt.android.compiler)
+//    kaptAndroidTest(libs.hilt.android.compiler)
     // Hilt and Robolectric tests.
     testImplementation(libs.hilt.android.testing)
-    kaptTest(libs.hilt.android.compiler)
+    kspTest(libs.hilt.android.compiler)
+    kspTest(libs.hilt.compiler)
+
 
     // Arch Components
     implementation(libs.androidx.lifecycle.runtime.compose)
@@ -105,7 +107,24 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.worker.ktx)
+    implementation(libs.androidx.hilt.worker)
+    ksp(libs.androidx.hilt.compiler)
     ksp(libs.androidx.room.compiler)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ksoup.html)
+
+
+    val okhttpBom = platform(libs.okhttp.bom)
+    implementation(okhttpBom)
+    implementation(libs.timber)
+    implementation(libs.retrofit)
+    implementation(libs.okhttp.core)
+    implementation(libs.okhttp.logging)
+    implementation(libs.coil)
+    implementation(libs.coil.network)
+
 
     // Compose
     implementation(libs.androidx.compose.ui)

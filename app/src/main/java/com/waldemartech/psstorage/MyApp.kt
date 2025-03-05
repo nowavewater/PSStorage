@@ -17,7 +17,29 @@
 package com.waldemartech.psstorage
 
 import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
+import com.waldemartech.psstorage.data.store.UpdateDealWorker
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
+import javax.inject.Inject
 
 @HiltAndroidApp
-class MyApp : Application()
+class MyApp : Application(), Configuration.Provider {
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override fun onCreate() {
+        super.onCreate()
+        Timber.plant(Timber.DebugTree())
+    }
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+}

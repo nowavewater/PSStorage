@@ -18,8 +18,39 @@ package com.waldemartech.psstorage.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.waldemartech.psstorage.data.local.database.dao.DealDao
+import com.waldemartech.psstorage.data.local.database.dao.PlatformDao
+import com.waldemartech.psstorage.data.local.database.dao.PriceDao
+import com.waldemartech.psstorage.data.local.database.dao.ProductDao
+import com.waldemartech.psstorage.data.local.database.table.CurrentDeal
+import com.waldemartech.psstorage.data.local.database.table.Deal
+import com.waldemartech.psstorage.data.local.database.table.FavoriteProduct
+import com.waldemartech.psstorage.data.local.database.table.IgnoredProduct
+import com.waldemartech.psstorage.data.local.database.table.Platform
+import com.waldemartech.psstorage.data.local.database.table.PriceHistory
+import com.waldemartech.psstorage.data.local.database.table.Product
+import com.waldemartech.psstorage.data.local.database.table.ProductPlatformCrossRef
 
-@Database(entities = [Book::class], version = 1)
+@Database(
+    entities = [
+        Deal::class,
+        CurrentDeal::class,
+        Platform::class,
+        PriceHistory::class,
+        Product::class,
+        ProductPlatformCrossRef::class,
+        FavoriteProduct::class,
+        IgnoredProduct::class
+               ],
+    version = 1
+)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun bookDao(): BookDao
+    abstract fun dealDao(): DealDao
+
+    abstract fun priceDao(): PriceDao
+
+    abstract fun platformDao(): PlatformDao
+
+    abstract fun productDao(): ProductDao
+
 }

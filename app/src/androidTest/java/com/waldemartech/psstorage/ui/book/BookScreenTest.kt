@@ -38,7 +38,7 @@ class BookScreenTest {
     @Before
     fun setup() {
         composeTestRule.setContent {
-            BookScreen(FAKE_DATA, onSave = {})
+        //    BookScreen(FAKE_DATA, onSave = {})
         }
     }
 

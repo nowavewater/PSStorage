@@ -30,6 +30,24 @@ fun JellyButton (
 }
 
 @Composable
+fun SmallOrionButton (
+    text: String,
+    modifier: Modifier = Modifier,
+    onClick : () -> Unit,
+) {
+    TextButton(
+        modifier = Modifier
+            .height(30.dp)
+            .width(100.dp)
+            .background(Color.Cyan)
+            .then(modifier),
+        onClick = onClick
+    ) {
+        Text(text = text)
+    }
+}
+
+@Composable
 fun HeightSpacer() {
     Spacer(modifier = Modifier.height(20.dp))
 }

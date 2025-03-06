@@ -1,5 +1,10 @@
 package com.waldemartech.psstorage.data.store
 
+import android.content.Context
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlHandler
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
 import com.waldemartech.psstorage.data.api.ApiConstants.BASE_URL
@@ -16,22 +21,29 @@ import com.waldemartech.psstorage.data.local.database.dao.ProductDao
 import com.waldemartech.psstorage.data.local.database.table.Platform
 import com.waldemartech.psstorage.data.local.database.table.PriceHistory
 import com.waldemartech.psstorage.data.local.database.table.Product
+import com.waldemartech.psstorage.data.store.StoreConstants.DEAL_ID_KEY
+import com.waldemartech.psstorage.data.store.StoreConstants.PAGE_INDEX_KEY
+import com.waldemartech.psstorage.data.store.StoreConstants.STORE_ID_KEY
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class UpdatePriceRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val productDao: ProductDao,
     private val platformDao: PlatformDao,
     private val priceDao: PriceDao,
     private val apiDataSource: ApiDataSource
 )  {
-
     private val scope = CoroutineScope(Dispatchers.IO)
+
+    private var shouldContinue = false
 
     suspend fun updatePrice(input: UpdatePriceInput) {
         val url = "$BASE_URL${input.storeId}/category/${input.dealId}$SLASH_SIGN${input.pageIndex}"
@@ -102,6 +114,7 @@ class UpdatePriceRepository @Inject constructor(
                     apolloState.keys().forEach { key ->
                         Timber.i("key is ${key}")
                         if (key.contains("Product")) {
+                            shouldContinue = true
                             Timber.i("for each product")
                             val productResponse = Json{ ignoreUnknownKeys = true }.decodeFromString<ProductResponse>(apolloState.getJSONObject(key).toString())
                             if (!productDao.hasProduct(productResponse.id)) {
@@ -157,6 +170,20 @@ class UpdatePriceRepository @Inject constructor(
                         }
                     }
                 }
+            }
+            if (shouldContinue) {
+                Timber.i("should continue ${input.pageIndex + 1}")
+                val inputData = Data.Builder()
+                    .putString(STORE_ID_KEY, input.storeId)
+                    .putInt(PAGE_INDEX_KEY, input.pageIndex + 1)
+                    .putString(DEAL_ID_KEY, input.dealId)
+                    .build()
+                val updateDealWorkRequest: WorkRequest =
+                    OneTimeWorkRequestBuilder<UpdatePriceWorker>()
+                        .setInitialDelay(20, TimeUnit.MILLISECONDS)
+                        .setInputData(inputData)
+                        .build()
+                WorkManager.getInstance(context).enqueue(updateDealWorkRequest)
             }
         } catch (throwable: Throwable) {
             Timber.e("on parse exception ${throwable}")

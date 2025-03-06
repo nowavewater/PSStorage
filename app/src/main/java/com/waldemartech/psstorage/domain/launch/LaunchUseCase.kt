@@ -2,11 +2,13 @@ package com.waldemartech.psstorage.domain.launch
 
 import android.content.Context
 import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.WorkRequest
 import com.waldemartech.psstorage.data.store.StoreConstants.HK_STORE_ID
 import com.waldemartech.psstorage.data.store.StoreConstants.STORE_ID_KEY
+import com.waldemartech.psstorage.data.store.StoreConstants.US_STORE_ID
 import com.waldemartech.psstorage.data.store.UpdateDealWorker
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.TimeUnit
@@ -23,12 +25,24 @@ class LaunchUseCase @Inject constructor(
         val hongKongData = Data.Builder()
             .putString(STORE_ID_KEY, HK_STORE_ID)
             .build()
-        val updateDealWorkRequest: WorkRequest =
+        val updateHongKongDealWorkRequest: OneTimeWorkRequest =
             OneTimeWorkRequestBuilder<UpdateDealWorker>()
                 .setInitialDelay(1, TimeUnit.SECONDS)
                 .setInputData(hongKongData)
                 .build()
-    //    WorkManager.getInstance(context).enqueue(updateDealWorkRequest)
+
+        val usData = Data.Builder()
+            .putString(STORE_ID_KEY, US_STORE_ID)
+            .build()
+        val updateUSDealWorkRequest: OneTimeWorkRequest =
+            OneTimeWorkRequestBuilder<UpdateDealWorker>()
+                .setInitialDelay(1, TimeUnit.SECONDS)
+                .setInputData(usData)
+                .build()
+
+        WorkManager.getInstance(context).enqueueUniqueWork(uniqueWorkName = HK_STORE_ID, existingWorkPolicy = ExistingWorkPolicy.KEEP, request = updateHongKongDealWorkRequest)
+        WorkManager.getInstance(context).enqueueUniqueWork(uniqueWorkName = US_STORE_ID, existingWorkPolicy = ExistingWorkPolicy.KEEP, request = updateUSDealWorkRequest)
+
     }
 
 }

@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.waldemartech.psstorage.domain.product.AddFavoriteUseCase
+import com.waldemartech.psstorage.domain.product.AddIgnoredUseCase
 import com.waldemartech.psstorage.domain.store.LoadProductByPageUseCase
 import com.waldemartech.psstorage.domain.store.LoadProductByPageUseCase.Companion.PAGE_ITEM
 import com.waldemartech.psstorage.ui.widget.entity.ProductItemData
@@ -16,8 +18,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DealDetailViewModel @Inject constructor(
-    private val loadProductByPageUseCase: LoadProductByPageUseCase
+    private val loadProductByPageUseCase: LoadProductByPageUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase,
+    private val addIgnoredUseCase: AddIgnoredUseCase
 ) : ViewModel() {
+
+    private val dispatcher = Dispatchers.IO
 
     private var _currentPage = mutableStateOf(0)
     fun currentPage() : State<Int> = _currentPage
@@ -25,7 +31,17 @@ class DealDetailViewModel @Inject constructor(
     private val _productList = mutableStateListOf<ProductItemData>()
     fun productList(): SnapshotStateList<ProductItemData> = _productList
 
+    fun addToFavorite(storeId: String, item: ProductItemData) {
+        viewModelScope.launch(dispatcher) {
+            addFavoriteUseCase(storeId = storeId, productId = item.productId)
+        }
+    }
 
+    fun addToIgnored(storeId: String, item: ProductItemData) {
+        viewModelScope.launch(dispatcher) {
+            addIgnoredUseCase(storeId = storeId, productId = item.productId)
+        }
+    }
 
     fun loadProductList(storeId: String, dealId: String, pageIndex: Int) {
         viewModelScope.launch(Dispatchers.IO) {

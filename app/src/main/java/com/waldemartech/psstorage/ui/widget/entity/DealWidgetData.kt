@@ -6,6 +6,7 @@ data class DealWidgetData(
 )
 
 data class ProductItemData(
+    val productId: String,
     val salePriceText: String,
     val originalPriceText: String,
     val titleText: String,

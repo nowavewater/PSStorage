@@ -43,13 +43,13 @@ data class SinglePrice(
     @SerialName("discountedPrice")
     val discountedPrice : String = EMPTY_STRING,
     @SerialName("discountText")
-    val discountText : String = EMPTY_STRING,
+    val discountText : String? = EMPTY_STRING,
     @SerialName("isFree")
     val isFree : Boolean = false,
     @SerialName("isExclusive")
     val isExclusive : Boolean = false,
     @SerialName("isTiedToSubscription")
-    val isTiedToSubscription : Boolean = false,
+    val isTiedToSubscription : Boolean? = false,
 )
 
 @Serializable

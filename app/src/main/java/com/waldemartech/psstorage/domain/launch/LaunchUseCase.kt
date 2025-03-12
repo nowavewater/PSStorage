@@ -2,9 +2,12 @@ package com.waldemartech.psstorage.domain.launch
 
 import android.content.Context
 import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.waldemartech.psstorage.data.store.StoreConstants.HK_STORE_ID
 import com.waldemartech.psstorage.data.store.StoreConstants.STORE_ID_KEY
@@ -25,8 +28,8 @@ class LaunchUseCase @Inject constructor(
         val hongKongData = Data.Builder()
             .putString(STORE_ID_KEY, HK_STORE_ID)
             .build()
-        val updateHongKongDealWorkRequest: OneTimeWorkRequest =
-            OneTimeWorkRequestBuilder<UpdateDealWorker>()
+        val updateHongKongDealWorkRequest: PeriodicWorkRequest =
+            PeriodicWorkRequestBuilder<UpdateDealWorker>(1, TimeUnit.DAYS)
                 .setInitialDelay(1, TimeUnit.SECONDS)
                 .setInputData(hongKongData)
                 .build()
@@ -34,14 +37,14 @@ class LaunchUseCase @Inject constructor(
         val usData = Data.Builder()
             .putString(STORE_ID_KEY, US_STORE_ID)
             .build()
-        val updateUSDealWorkRequest: OneTimeWorkRequest =
-            OneTimeWorkRequestBuilder<UpdateDealWorker>()
+        val updateUSDealWorkRequest: PeriodicWorkRequest =
+            PeriodicWorkRequestBuilder<UpdateDealWorker>(1, TimeUnit.DAYS)
                 .setInitialDelay(1, TimeUnit.SECONDS)
                 .setInputData(usData)
                 .build()
 
-        WorkManager.getInstance(context).enqueueUniqueWork(uniqueWorkName = HK_STORE_ID, existingWorkPolicy = ExistingWorkPolicy.KEEP, request = updateHongKongDealWorkRequest)
-        WorkManager.getInstance(context).enqueueUniqueWork(uniqueWorkName = US_STORE_ID, existingWorkPolicy = ExistingWorkPolicy.KEEP, request = updateUSDealWorkRequest)
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(uniqueWorkName = HK_STORE_ID, existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.KEEP, request = updateHongKongDealWorkRequest)
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(uniqueWorkName = US_STORE_ID, existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.KEEP, request = updateUSDealWorkRequest)
 
     }
 

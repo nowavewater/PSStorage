@@ -112,10 +112,10 @@ class UpdatePriceRepository @Inject constructor(
                 if (props.has("apolloState")) {
                     val apolloState = props.getJSONObject("apolloState")
                     apolloState.keys().forEach { key ->
-                        Timber.i("key is ${key}")
+                    //    Timber.i("key is ${key}")
                         if (key.contains("Product")) {
                             shouldContinue = true
-                            Timber.i("for each product")
+                        //    Timber.i("for each product")
                             val productResponse = Json{ ignoreUnknownKeys = true }.decodeFromString<ProductResponse>(apolloState.getJSONObject(key).toString())
                             if (!productDao.hasProduct(productResponse.id)) {
                                 var imageUrl : String = EMPTY_STRING
@@ -148,20 +148,22 @@ class UpdatePriceRepository @Inject constructor(
                                 val priceResponse = productResponse.price
                                 val basePriceList = priceResponse.basePrice.split("\$")
                                 val discountedPriceList = priceResponse.discountedPrice.split("\$")
-                                if (basePriceList.size >= 2) {
+                                if (basePriceList.size >= 2 && discountedPriceList.size >= 2) {
                                     val unit = basePriceList[0]
-                                    val basePrice = basePriceList[1].toFloat()
-                                    val discountedPrice = discountedPriceList[1].toFloat()
+                                    val basePrice = basePriceList[1].replace(",", "").toFloat()
+                                    val discountedPrice = discountedPriceList[1].replace(",", "").toFloat()
+                                    val discountText = priceResponse.discountText ?: EMPTY_STRING
+                                    val isTiedToSubscription = priceResponse.isTiedToSubscription ?: false
                                     val price = PriceHistory(
                                         productIdPriceRef = productResponse.id,
                                         dealIdPriceRef = input.dealId,
                                         unit = unit,
                                         basePrice = basePrice,
                                         discountedPrice = discountedPrice,
-                                        discountText = priceResponse.discountText,
+                                        discountText = discountText,
                                         isFree = priceResponse.isFree,
                                         isExclusive = priceResponse.isExclusive,
-                                        isTiedToSubscription = priceResponse.isTiedToSubscription,
+                                        isTiedToSubscription = isTiedToSubscription,
                                         storeIdInPriceHistory = input.storeId
                                     )
                                     priceDao.insertPriceHistory(price)
@@ -197,9 +199,4 @@ data class UpdatePriceInput(
     val dealId: String,
     val storeId: String,
     val pageIndex: Int
-)
-
-data class PriceData(
-    val unit: String,
-    val price: Float
 )

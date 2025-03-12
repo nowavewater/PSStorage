@@ -38,7 +38,7 @@ fun SmallOrionButton (
     TextButton(
         modifier = Modifier
             .height(30.dp)
-            .width(100.dp)
+            .width(80.dp)
             .background(Color.Cyan)
             .then(modifier),
         onClick = onClick

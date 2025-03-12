@@ -17,6 +17,7 @@ class LoadProductByPageUseCase @Inject constructor(
             val priceHistory = productHistory.priceHistory
             val product = productHistory.product
             ProductItemData(
+                productId = product.productId,
                 salePriceText = priceHistory.unit + priceHistory.discountedPrice,
                 originalPriceText = priceHistory.unit + priceHistory.basePrice,
                 titleText = product.name,

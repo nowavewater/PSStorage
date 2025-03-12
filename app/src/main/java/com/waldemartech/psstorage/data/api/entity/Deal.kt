@@ -10,7 +10,7 @@ data class DealResponse(
     val imageUrl : String = EMPTY_STRING,
 
     @SerialName("link")
-    val link: DealLink
+    val link: DealLink? = null
 )
 
 @Serializable

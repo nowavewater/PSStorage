@@ -111,7 +111,7 @@ class UpdateDealRepository @Inject constructor(
                     apolloState.keys().forEach { key ->
                         if (key.contains("EMSImageComponent")) {
                             val dealResponse = Json{ ignoreUnknownKeys = true }.decodeFromString<DealResponse>(apolloState.getJSONObject(key).toString())
-                            dealResponse.link.localizedName?.let { localizedName ->
+                            dealResponse.link?.localizedName?.let { localizedName ->
                                 if (!excludeSet.contains(localizedName) ) {
                                     if (!dealDao.hasDeal(dealResponse.link.target)) {
                                         dealDao.insertDeal(Deal(dealId = dealResponse.link.target, imageUrl = dealResponse.imageUrl, localizedName = dealResponse.link.localizedName, storeIdInDeal = storeData.storeId))

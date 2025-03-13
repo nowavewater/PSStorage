@@ -28,6 +28,20 @@ interface ProductDao {
         offset: Int
     ) : List<ProductPriceInDeal>
 
+    @Query("SELECT * FROM product WHERE productId IN (SELECT favoriteProductId FROM favorite_product) AND storeIdInProduct == :storeId LIMIT :limit OFFSET :offset")
+    suspend fun loadFavoriteByPage(
+        storeId: String,
+        limit: Int,
+        offset: Int
+    ) : List<Product>
+
+    @Query("SELECT * FROM product WHERE productId IN (SELECT ignoredProductId FROM ignored_product) AND storeIdInProduct == :storeId LIMIT :limit OFFSET :offset")
+    suspend fun loadIgnoredByPage(
+        storeId: String,
+        limit: Int,
+        offset: Int
+    ) : List<Product>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertFavoriteProduct(item: FavoriteProduct)
 

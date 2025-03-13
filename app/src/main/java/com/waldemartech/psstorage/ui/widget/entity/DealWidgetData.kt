@@ -5,12 +5,19 @@ data class DealWidgetData(
     val imageUrl: String
 )
 
-data class ProductItemData(
+data class ProductPriceItemData(
     val productId: String,
     val salePriceText: String,
     val originalPriceText: String,
     val titleText: String,
     val percentOffText: String,
+    val productTypeText: String,
+    val imageUrl: String
+)
+
+data class ProductItemData(
+    val productId: String,
+    val titleText: String,
     val productTypeText: String,
     val imageUrl: String
 )

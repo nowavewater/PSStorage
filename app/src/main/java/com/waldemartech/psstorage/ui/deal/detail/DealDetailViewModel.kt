@@ -1,6 +1,7 @@
 package com.waldemartech.psstorage.ui.deal.detail
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -9,8 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.waldemartech.psstorage.domain.product.AddFavoriteUseCase
 import com.waldemartech.psstorage.domain.product.AddIgnoredUseCase
 import com.waldemartech.psstorage.domain.store.LoadProductByPageUseCase
-import com.waldemartech.psstorage.domain.store.LoadProductByPageUseCase.Companion.PAGE_ITEM
-import com.waldemartech.psstorage.ui.widget.entity.ProductItemData
+import com.waldemartech.psstorage.ui.widget.entity.ProductPriceItemData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,19 +25,19 @@ class DealDetailViewModel @Inject constructor(
 
     private val dispatcher = Dispatchers.IO
 
-    private var _currentPage = mutableStateOf(0)
+    private var _currentPage = mutableIntStateOf(0)
     fun currentPage() : State<Int> = _currentPage
 
-    private val _productList = mutableStateListOf<ProductItemData>()
-    fun productList(): SnapshotStateList<ProductItemData> = _productList
+    private val _productList = mutableStateListOf<ProductPriceItemData>()
+    fun productList(): SnapshotStateList<ProductPriceItemData> = _productList
 
-    fun addToFavorite(storeId: String, item: ProductItemData) {
+    fun addToFavorite(storeId: String, item: ProductPriceItemData) {
         viewModelScope.launch(dispatcher) {
             addFavoriteUseCase(storeId = storeId, productId = item.productId)
         }
     }
 
-    fun addToIgnored(storeId: String, item: ProductItemData) {
+    fun addToIgnored(storeId: String, item: ProductPriceItemData) {
         viewModelScope.launch(dispatcher) {
             addIgnoredUseCase(storeId = storeId, productId = item.productId)
         }
@@ -45,20 +45,20 @@ class DealDetailViewModel @Inject constructor(
 
     fun loadProductList(storeId: String, dealId: String, pageIndex: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val list = loadProductByPageUseCase(storeId = storeId, dealId = dealId, offset = pageIndex + PAGE_ITEM)
+            val list = loadProductByPageUseCase(storeId = storeId, dealId = dealId, page = pageIndex)
             _productList.clear()
             _productList.addAll(list)
         }
     }
 
     fun loadNextPage(storeId: String, dealId: String) {
-        _currentPage.value++
-        loadProductList(storeId = storeId, dealId = dealId, pageIndex = _currentPage.value)
+        _currentPage.intValue++
+        loadProductList(storeId = storeId, dealId = dealId, pageIndex = _currentPage.intValue)
     }
 
     fun  loadPreviousPage(storeId: String, dealId: String) {
-        _currentPage.value--
-        loadProductList(storeId = storeId, dealId = dealId, pageIndex = _currentPage.value)
+        _currentPage.intValue--
+        loadProductList(storeId = storeId, dealId = dealId, pageIndex = _currentPage.intValue)
     }
 
 }

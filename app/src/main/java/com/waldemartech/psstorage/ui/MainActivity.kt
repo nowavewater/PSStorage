@@ -94,14 +94,16 @@ class MainActivity : ComponentActivity() {
                             //    val downloadId = backStackEntry.arguments?.getString(DOWNLOAD_ID_KEY)
                             ProductDetailScreen()
                         }
-                        composable(DEST_IGNORED_LIST) { backStackEntry ->
-                            //    val downloadId = backStackEntry.arguments?.getString(DOWNLOAD_ID_KEY)
-                            IgnoredListScreen()
+                        composable(buildSingleArgsDest(DEST_IGNORED_LIST, STORE_ID_KEY)) { backStackEntry ->
+                            val storeId = backStackEntry.arguments?.getString(STORE_ID_KEY)
+                            requireNotNull(storeId)
+                            IgnoredListScreen(storeId)
                         }
 
-                        composable(DEST_FAVORITE_LIST) { backStackEntry ->
-                            //    val downloadId = backStackEntry.arguments?.getString(DOWNLOAD_ID_KEY)
-                            FavoriteListScreen()
+                        composable(buildSingleArgsDest(DEST_FAVORITE_LIST, STORE_ID_KEY)) { backStackEntry ->
+                            val storeId = backStackEntry.arguments?.getString(STORE_ID_KEY)
+                            requireNotNull(storeId)
+                            FavoriteListScreen(storeId)
                         }
                     }
                 }

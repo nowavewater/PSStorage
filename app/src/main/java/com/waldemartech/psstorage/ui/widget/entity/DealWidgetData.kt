@@ -11,7 +11,7 @@ data class ProductPriceItemData(
     val originalPriceText: String,
     val titleText: String,
     val percentOffText: String,
-    val productTypeText: String,
+    val classificationText: String,
     val imageUrl: String
 )
 

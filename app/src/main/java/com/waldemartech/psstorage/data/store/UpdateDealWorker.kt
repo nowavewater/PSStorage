@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import com.waldemartech.psstorage.data.base.SharedConstants.EMPTY_STRING
 import com.waldemartech.psstorage.data.store.StoreConstants.STORE_ID_KEY
+import com.waldemartech.psstorage.domain.store.UpdateDealUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -14,7 +15,7 @@ import dagger.assisted.AssistedInject
 class UpdateDealWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val updateDealRepository: UpdateDealRepository
+    private val updateDealUseCase: UpdateDealUseCase
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -22,7 +23,7 @@ class UpdateDealWorker @AssistedInject constructor(
             return Result.failure()
         }
         val storeId = inputData.getString(STORE_ID_KEY) ?: EMPTY_STRING
-        updateDealRepository.updateDeal(StoreData(storeId))
+        updateDealUseCase(storeData = StoreData(storeId = storeId))
         return Result.success()
     }
 

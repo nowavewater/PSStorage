@@ -22,7 +22,7 @@ class LoadProductByPageUseCase @Inject constructor(
                 originalPriceText = priceHistory.unit + priceHistory.basePrice,
                 titleText = product.name,
                 percentOffText = priceHistory.discountText,
-                productTypeText = product.typeName,
+                classificationText = product.localizedDisplayClassification,
                 imageUrl = product.imageUrl
             )
         }

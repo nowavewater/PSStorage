@@ -1,11 +1,10 @@
 package com.waldemartech.psstorage.domain.launch
 
 import android.content.Context
+import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -25,12 +24,19 @@ class LaunchUseCase @Inject constructor(
     }
 
     private fun onLaunch() {
+        val constraints = Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .setRequiresCharging(false)
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
+
         val hongKongData = Data.Builder()
             .putString(STORE_ID_KEY, HK_STORE_ID)
             .build()
         val updateHongKongDealWorkRequest: PeriodicWorkRequest =
             PeriodicWorkRequestBuilder<UpdateDealWorker>(1, TimeUnit.DAYS)
                 .setInitialDelay(1, TimeUnit.SECONDS)
+                .setConstraints(constraints)
                 .setInputData(hongKongData)
                 .build()
 
@@ -40,8 +46,10 @@ class LaunchUseCase @Inject constructor(
         val updateUSDealWorkRequest: PeriodicWorkRequest =
             PeriodicWorkRequestBuilder<UpdateDealWorker>(1, TimeUnit.DAYS)
                 .setInitialDelay(1, TimeUnit.SECONDS)
+                .setConstraints(constraints)
                 .setInputData(usData)
                 .build()
+
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(uniqueWorkName = HK_STORE_ID, existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.KEEP, request = updateHongKongDealWorkRequest)
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(uniqueWorkName = US_STORE_ID, existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.KEEP, request = updateUSDealWorkRequest)

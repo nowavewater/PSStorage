@@ -12,14 +12,6 @@ object StoreConstants {
 
     const val US_STORE_ID = "en-us"
 
-    fun excludeLocalizedName() = setOf(
-        "cat.gma.PlayStation_VR2_Games",
-        "cat.gma.AllDeals",
-        "cat.gma.x_All_PS5_games",
-        "cat.gma.x_Free_to_play",
-        "cat.gma.PS5_Pro_Enhanced_Games",
-        "cat.gma.x_All_PS4_games",
-        "cat.gma.AddonsByGame"
-    )
+
 
 }

@@ -125,6 +125,13 @@ class UpdatePriceRepository @Inject constructor(
                                         return@forEachMedia
                                     }
                                 }
+
+                                productResponse.platforms.forEach { platform ->
+                                    if (!platformDao.hasPlatForm(platform)) {
+                                        platformDao.insertPlatForm(Platform(name = platform))
+                                    }
+                                }
+
                                 val product = Product(
                                     productId = productResponse.id,
                                     name = productResponse.name,
@@ -136,12 +143,7 @@ class UpdatePriceRepository @Inject constructor(
                                     storeIdInProduct = input.storeId
                                 )
                                 productDao.insertProduct(product)
-                            }
 
-                            productResponse.platforms.forEach { platform ->
-                                if (!platformDao.hasPlatForm(platform)) {
-                                    platformDao.insertPlatForm(Platform(name = platform))
-                                }
                             }
 
                             if (!priceDao.hasPrice(productId = productResponse.id, dealId = input.dealId)) {

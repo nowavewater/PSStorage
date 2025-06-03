@@ -3,13 +3,13 @@ package com.waldemartech.psstorage.ui.deal.detail
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.waldemartech.psstorage.domain.product.AddFavoriteUseCase
 import com.waldemartech.psstorage.domain.product.AddIgnoredUseCase
 import com.waldemartech.psstorage.domain.store.LoadProductByPageUseCase
+import com.waldemartech.psstorage.domain.store.LoadProductCountUseCase
 import com.waldemartech.psstorage.ui.widget.entity.ProductPriceItemData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DealDetailViewModel @Inject constructor(
     private val loadProductByPageUseCase: LoadProductByPageUseCase,
+    private val loadProductCountUseCase: LoadProductCountUseCase,
     private val addFavoriteUseCase: AddFavoriteUseCase,
     private val addIgnoredUseCase: AddIgnoredUseCase
 ) : ViewModel() {
@@ -31,6 +32,15 @@ class DealDetailViewModel @Inject constructor(
     private val _productList = mutableStateListOf<ProductPriceItemData>()
     fun productList(): SnapshotStateList<ProductPriceItemData> = _productList
 
+    private var _totalItemCount = mutableIntStateOf(0)
+    fun totalItemCount(): State<Int> = _totalItemCount
+
+    fun  loadTotalItemCount(storeId: String, dealId: String) {
+        viewModelScope.launch(dispatcher) {
+            val count = loadProductCountUseCase(storeId = storeId, dealId = dealId)
+            _totalItemCount.intValue = count
+        }
+    }
     fun addToFavorite(storeId: String, item: ProductPriceItemData) {
         viewModelScope.launch(dispatcher) {
             addFavoriteUseCase(storeId = storeId, productId = item.productId)

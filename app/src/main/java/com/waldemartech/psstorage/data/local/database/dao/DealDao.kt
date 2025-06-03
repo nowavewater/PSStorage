@@ -11,8 +11,6 @@ import com.waldemartech.psstorage.data.local.database.table.Deal
 
 @Dao
 interface DealDao {
-    @Query("SELECT * FROM deal")
-    suspend fun getDeals(): List<Deal>
 
     @Transaction
     @Query("SELECT * FROM current_deal WHERE storeIdInCurrentDeal == :storeId")

@@ -9,7 +9,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.waldemartech.psstorage.data.store.StoreConstants.HK_STORE_ID
 import com.waldemartech.psstorage.data.store.StoreConstants.US_STORE_ID
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_STORE_DETAIL
-import com.waldemartech.psstorage.ui.MainNavConstants.DEST_STORE_LIST
 import com.waldemartech.psstorage.ui.MainNavConstants.navigateSingle
 import com.waldemartech.psstorage.ui.widget.button.HeightSpacer
 import com.waldemartech.psstorage.ui.widget.button.JellyButton
@@ -33,7 +32,7 @@ fun StoreListScreen(
         HeightSpacer()
 
         JellyButton(text = "US") {
-            navController.navigateSingle(DEST_STORE_LIST, US_STORE_ID)
+            navController.navigateSingle(DEST_STORE_DETAIL, US_STORE_ID)
 
         }
     }

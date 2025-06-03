@@ -9,6 +9,9 @@ data class DealResponse(
     @SerialName("imageUrl")
     val imageUrl : String = EMPTY_STRING,
 
+    @SerialName("altText")
+    val altText : String = EMPTY_STRING,
+
     @SerialName("link")
     val link: DealLink? = null
 )

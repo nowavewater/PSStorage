@@ -13,12 +13,13 @@ class LoadFavoriteByPageUseCase  @Inject constructor(
             storeId = storeId,
             limit = PAGE_ITEM_COUNT,
             offset = page * PAGE_ITEM_COUNT
-        ).map { product ->
+        ).map { productDetail ->
             ProductItemData(
-                productId = product.productId,
-                titleText = product.name,
-                productTypeText = product.typeName,
-                imageUrl = product.imageUrl
+                productId = productDetail.product.productId,
+                titleText = productDetail.product.name,
+                classificationText = productDetail.product.localizedDisplayClassification,
+                imageUrl = productDetail.product.imageUrl,
+                platformList = productDetail.platforms.map { it.name }
             )
         }
     }

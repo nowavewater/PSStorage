@@ -15,4 +15,7 @@ interface PlatformDao {
     @Query("SELECT EXISTS(SELECT 1 FROM product WHERE name == :name)")
     suspend fun hasPlatForm(name: String) : Boolean
 
+    @Query("SELECT platformId FROM platform WHERE name = :platformName LIMIT 1")
+    suspend fun getPlatformIdByName(platformName: String): Long
+
 }

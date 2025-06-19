@@ -6,6 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.waldemartech.psstorage.data.store.StoreConstants.HK_STORE_ID
 import com.waldemartech.psstorage.data.store.StoreConstants.US_STORE_ID
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_STORE_DETAIL
@@ -13,10 +16,13 @@ import com.waldemartech.psstorage.ui.MainNavConstants.navigateSingle
 import com.waldemartech.psstorage.ui.widget.button.HeightSpacer
 import com.waldemartech.psstorage.ui.widget.button.JellyButton
 import com.waldemartech.psstorage.ui.widget.base.theme.LocalNavController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun StoreListScreen(
-    storeListViewModel: StoreListViewModel = hiltViewModel()
+    storeListViewModel: StoreListViewModel = hiltViewModel(),
 ) {
     val navController = LocalNavController.current
 
@@ -34,6 +40,11 @@ fun StoreListScreen(
         JellyButton(text = "US") {
             navController.navigateSingle(DEST_STORE_DETAIL, US_STORE_ID)
 
+        }
+        HeightSpacer()
+
+        JellyButton(text = "SYNC") {
+            storeListViewModel.syncDeals()
         }
     }
 

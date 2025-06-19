@@ -12,12 +12,14 @@ data class ProductPriceItemData(
     val titleText: String,
     val percentOffText: String,
     val classificationText: String,
-    val imageUrl: String
+    val imageUrl: String,
+    val platformList: List<String>
 )
 
 data class ProductItemData(
     val productId: String,
     val titleText: String,
-    val productTypeText: String,
-    val imageUrl: String
+    val classificationText: String,
+    val imageUrl: String,
+    val platformList: List<String>
 )

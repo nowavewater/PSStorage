@@ -25,9 +25,7 @@ class LaunchUseCase @Inject constructor(
 
     private fun onLaunch() {
         val constraints = Constraints.Builder()
-            .setRequiresBatteryNotLow(true)
-            .setRequiresCharging(false)
-            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
         val hongKongData = Data.Builder()

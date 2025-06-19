@@ -21,6 +21,7 @@ import com.waldemartech.psstorage.data.local.database.dao.ProductDao
 import com.waldemartech.psstorage.data.local.database.table.Platform
 import com.waldemartech.psstorage.data.local.database.table.PriceHistory
 import com.waldemartech.psstorage.data.local.database.table.Product
+import com.waldemartech.psstorage.data.local.database.table.ProductPlatformCrossRef
 import com.waldemartech.psstorage.data.store.StoreConstants.DEAL_ID_KEY
 import com.waldemartech.psstorage.data.store.StoreConstants.PAGE_INDEX_KEY
 import com.waldemartech.psstorage.data.store.StoreConstants.STORE_ID_KEY
@@ -144,6 +145,17 @@ class UpdatePriceRepository @Inject constructor(
                                 )
                                 productDao.insertProduct(product)
 
+                                productResponse.platforms.forEach { platformName ->
+                                    if (!productDao.hasProductInPlatform(productId = productResponse.id, platformName = platformName)) {
+                                        val platformId = platformDao.getPlatformIdByName(platformName)
+                                        productDao.insertProductPlatformCrossRef(
+                                            ProductPlatformCrossRef(
+                                                productId = productResponse.id,
+                                                platformId = platformId
+                                            )
+                                        )
+                                    }
+                                }
                             }
 
                             if (!priceDao.hasPrice(productId = productResponse.id, dealId = input.dealId)) {

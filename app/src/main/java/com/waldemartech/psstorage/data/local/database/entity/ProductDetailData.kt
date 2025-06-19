@@ -4,13 +4,11 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.waldemartech.psstorage.data.local.database.table.Platform
-import com.waldemartech.psstorage.data.local.database.table.PriceHistory
 import com.waldemartech.psstorage.data.local.database.table.Product
 import com.waldemartech.psstorage.data.local.database.table.ProductPlatformCrossRef
 
-data class ProductPriceInDeal(
+data class ProductDetailData(
     @Embedded val product: Product,
-    @Embedded val priceHistory: PriceHistory,
     @Relation(
         parentColumn = "productId",
         entity = Platform::class,

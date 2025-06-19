@@ -1,8 +1,10 @@
 package com.waldemartech.psstorage.ui.deal.detail
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,6 +28,9 @@ class DealDetailViewModel @Inject constructor(
 
     private val dispatcher = Dispatchers.IO
 
+    private var _filterMode: MutableState<FilterMode> =  mutableStateOf(FilterMode.Default)
+    val filterMode: State<FilterMode> = _filterMode
+
     private var _currentPage = mutableIntStateOf(0)
     fun currentPage() : State<Int> = _currentPage
 
@@ -35,9 +40,17 @@ class DealDetailViewModel @Inject constructor(
     private var _totalItemCount = mutableIntStateOf(0)
     fun totalItemCount(): State<Int> = _totalItemCount
 
-    fun  loadTotalItemCount(storeId: String, dealId: String) {
+    private fun loadTotalItemCount(
+        filterMode: FilterMode,
+        storeId: String,
+        dealId: String
+    ) {
         viewModelScope.launch(dispatcher) {
-            val count = loadProductCountUseCase(storeId = storeId, dealId = dealId)
+            val count = loadProductCountUseCase(
+                filterMode = filterMode,
+                storeId = storeId,
+                dealId = dealId
+            )
             _totalItemCount.intValue = count
         }
     }
@@ -55,9 +68,24 @@ class DealDetailViewModel @Inject constructor(
 
     fun loadProductList(storeId: String, dealId: String, pageIndex: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val list = loadProductByPageUseCase(storeId = storeId, dealId = dealId, page = pageIndex)
-            _productList.clear()
-            _productList.addAll(list)
+            launch {
+                val list = loadProductByPageUseCase(
+                    filterMode = _filterMode.value,
+                    storeId = storeId,
+                    dealId = dealId,
+                    page = pageIndex
+                )
+                _productList.clear()
+                _productList.addAll(list)
+            }
+            launch {
+                loadTotalItemCount(
+                    filterMode = _filterMode.value,
+                    storeId = storeId,
+                    dealId = dealId
+                )
+            }
+
         }
     }
 
@@ -70,5 +98,17 @@ class DealDetailViewModel @Inject constructor(
         _currentPage.intValue--
         loadProductList(storeId = storeId, dealId = dealId, pageIndex = _currentPage.intValue)
     }
+
+    fun updateFilterMode(
+        mode: FilterMode,
+        storeId: String,
+        dealId: String
+    ) {
+        _filterMode.value = mode
+        _currentPage.intValue = 0
+        loadProductList(storeId = storeId, dealId = dealId, pageIndex = _currentPage.intValue)
+    }
+
+
 
 }

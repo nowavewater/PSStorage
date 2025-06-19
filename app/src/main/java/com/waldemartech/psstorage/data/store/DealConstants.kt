@@ -9,7 +9,7 @@ import timber.log.Timber
 
 object DealConstants {
 
-    suspend fun processResponse(
+    suspend fun processDealResponse(
         control: ResponseProcessControl,
         response: String,
     ) {
@@ -60,7 +60,7 @@ object DealConstants {
         ksoupHtmlParser.end()
     }
 
-    fun processText(
+    fun processDealText(
         text: String,
         watchingKey: String,
         onDealResponse: (DealResponse) -> Unit
@@ -115,4 +115,25 @@ data class TagData(
     val tagName: String,
     val attributeName: String,
     val attributeValue: String
+)
+
+data class UpdatePriceInput(
+    val dealId: DealId,
+    val storeId: StoreId,
+    val pageIndex: Int
+)
+
+data class UpdateDealInput(
+    val dealId: DealId,
+    val storeId: StoreId,
+)
+
+@JvmInline
+value class StoreId(
+    val storeId: String
+)
+
+@JvmInline
+value class DealId(
+    val dealId: String
 )

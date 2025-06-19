@@ -30,6 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.waldemartech.psstorage.data.store.StoreConstants.DEAL_ID_KEY
 import com.waldemartech.psstorage.data.store.StoreConstants.STORE_ID_KEY
+import com.waldemartech.psstorage.data.store.StoreId
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_DEAL_DETAIL
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_DEAL_LIST
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_FAVORITE_LIST
@@ -79,7 +80,7 @@ class MainActivity : ComponentActivity() {
                         composable(buildSingleArgsDest(DEST_DEAL_LIST, STORE_ID_KEY)) { backStackEntry ->
                             val storeId = backStackEntry.arguments?.getString(STORE_ID_KEY)
                             requireNotNull(storeId)
-                            DealListScreen(storeId)
+                            DealListScreen(StoreId(storeId))
                         }
                         composable(buildDoubleArgsDest(DEST_DEAL_DETAIL, STORE_ID_KEY, DEAL_ID_KEY) ) { backStackEntry ->
                             val storeId = backStackEntry.arguments?.getString(STORE_ID_KEY)

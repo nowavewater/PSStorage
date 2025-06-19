@@ -31,8 +31,8 @@ class UpdatePriceWorker @AssistedInject constructor(
         val pageIndex = inputData.getInt(PAGE_INDEX_KEY, NOT_AVAILABLE)
         updatePriceRepository.updatePrice(
             UpdatePriceInput(
-                dealId = dealId,
-                storeId = storeId,
+                dealId = DealId(dealId),
+                storeId = StoreId(storeId),
                 pageIndex = pageIndex
             )
         )

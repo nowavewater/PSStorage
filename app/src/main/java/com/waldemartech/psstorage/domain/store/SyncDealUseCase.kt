@@ -5,9 +5,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.waldemartech.psstorage.data.store.StoreConstants.HK_STORE_ID
 import com.waldemartech.psstorage.data.store.StoreConstants.STORE_ID_KEY
-import com.waldemartech.psstorage.data.store.StoreConstants.US_STORE_ID
 import com.waldemartech.psstorage.data.store.UpdateDealWorker
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -15,25 +13,17 @@ import javax.inject.Inject
 class SyncDealUseCase @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    suspend operator fun invoke() {
-        val hongKongData = Data.Builder()
-            .putString(STORE_ID_KEY, HK_STORE_ID)
+    suspend operator fun invoke(storeId: String) {
+        val inputData = Data.Builder()
+            .putString(STORE_ID_KEY, storeId)
             .build()
-        val usData = Data.Builder()
-            .putString(STORE_ID_KEY, US_STORE_ID)
-            .build()
-        val updateHongKongDealWorkRequest: OneTimeWorkRequest =
+
+        val updateDealWorkRequest: OneTimeWorkRequest =
             OneTimeWorkRequestBuilder<UpdateDealWorker>()
-                .setInputData(hongKongData)
+                .setInputData(inputData)
                 .build()
 
-        val updateUsDealWorkRequest: OneTimeWorkRequest =
-            OneTimeWorkRequestBuilder<UpdateDealWorker>()
-                .setInputData(usData)
-                .build()
-
-        WorkManager.getInstance(context).enqueue(updateHongKongDealWorkRequest)
-        WorkManager.getInstance(context).enqueue(updateUsDealWorkRequest)
+        WorkManager.getInstance(context).enqueue(updateDealWorkRequest)
     }
 
 }

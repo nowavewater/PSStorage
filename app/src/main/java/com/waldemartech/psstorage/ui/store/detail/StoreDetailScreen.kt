@@ -10,7 +10,6 @@ import com.waldemartech.psstorage.ui.MainNavConstants.DEST_DEAL_LIST
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_FAVORITE_LIST
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_IGNORED_LIST
 import com.waldemartech.psstorage.ui.MainNavConstants.navigateSingle
-import com.waldemartech.psstorage.ui.product.favorite.FavoriteListScreen
 import com.waldemartech.psstorage.ui.widget.button.HeightSpacer
 import com.waldemartech.psstorage.ui.widget.button.JellyButton
 import com.waldemartech.psstorage.ui.widget.base.theme.LocalNavController
@@ -27,22 +26,20 @@ fun StoreDetailScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HeightSpacer()
-
         JellyButton(text = "Deals") {
             navController.navigateSingle(DEST_DEAL_LIST, storeId)
         }
         HeightSpacer()
-
         JellyButton(text = "Favorite") {
             navController.navigateSingle(DEST_FAVORITE_LIST, storeId)
-
         }
-
         HeightSpacer()
-
         JellyButton(text = "Ignored") {
             navController.navigateSingle(DEST_IGNORED_LIST, storeId)
-
+        }
+        HeightSpacer()
+        JellyButton(text = "Sync") {
+            storeDetailViewModel.syncDeal(storeId)
         }
     }
 

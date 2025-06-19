@@ -8,9 +8,20 @@ import androidx.work.WorkRequest
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlHandler
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
 import com.waldemartech.psstorage.data.api.ApiConstants.BASE_URL
+import com.waldemartech.psstorage.data.api.ApiConstants.EXCLUDED_LOCALIZED_NAME
+import com.waldemartech.psstorage.data.api.ApiConstants.HTML_ATTRIBUTE_NAME_CLASS
+import com.waldemartech.psstorage.data.api.ApiConstants.HTML_ATTRIBUTE_NAME_DATA_TARGET
+import com.waldemartech.psstorage.data.api.ApiConstants.HTML_ATTRIBUTE_NAME_HREF
 import com.waldemartech.psstorage.data.api.ApiConstants.HTML_ATTRIBUTE_NAME_ID
+import com.waldemartech.psstorage.data.api.ApiConstants.HTML_TAG_A
+import com.waldemartech.psstorage.data.api.ApiConstants.HTML_TAG_DIV
 import com.waldemartech.psstorage.data.api.ApiConstants.HTML_TAG_SCRIPT
+import com.waldemartech.psstorage.data.api.ApiConstants.IMAGE_COMPONENT
+import com.waldemartech.psstorage.data.api.ApiConstants.LINK_TYPE_VIEW
+import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_DEAL_ALLY_INDICATOR_CLASS
 import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_DEAL_ID
+import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_DEAL_LINK_CLASS
+import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_KEY_WORD_VIEW
 import com.waldemartech.psstorage.data.api.ApiDataSource
 import com.waldemartech.psstorage.data.api.entity.ProductResponse
 import com.waldemartech.psstorage.data.base.SharedConstants.EMPTY_STRING
@@ -18,6 +29,7 @@ import com.waldemartech.psstorage.data.base.SharedConstants.SLASH_SIGN
 import com.waldemartech.psstorage.data.local.database.dao.PlatformDao
 import com.waldemartech.psstorage.data.local.database.dao.PriceDao
 import com.waldemartech.psstorage.data.local.database.dao.ProductDao
+import com.waldemartech.psstorage.data.local.database.table.Deal
 import com.waldemartech.psstorage.data.local.database.table.Platform
 import com.waldemartech.psstorage.data.local.database.table.PriceHistory
 import com.waldemartech.psstorage.data.local.database.table.Product
@@ -25,6 +37,7 @@ import com.waldemartech.psstorage.data.local.database.table.ProductPlatformCross
 import com.waldemartech.psstorage.data.store.StoreConstants.DEAL_ID_KEY
 import com.waldemartech.psstorage.data.store.StoreConstants.PAGE_INDEX_KEY
 import com.waldemartech.psstorage.data.store.StoreConstants.STORE_ID_KEY
+import com.waldemartech.psstorage.data.store.entity.SubDealData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +69,7 @@ class UpdatePriceRepository @Inject constructor(
                 params = params,
                 headers = headers
             )
-            processResponse(responseBody.string(), input)
+        //    processResponse(responseBody.string(), input)
             /*processDealResponse(
                 responseBody.string()
             )*/
@@ -66,7 +79,7 @@ class UpdatePriceRepository @Inject constructor(
         }
     }
 
-    private suspend fun processResponse(response: String, input: UpdatePriceInput) {
+    /*private suspend fun processResponse(response: String, input: UpdatePriceInput) {
         val dealHandler = object : KsoupHtmlHandler {
             var watchingState : WatchingState = WatchingState.None
             override fun onOpenTag(name: String, attributes: Map<String, String>, isImplied: Boolean) {
@@ -141,7 +154,7 @@ class UpdatePriceRepository @Inject constructor(
                                     imageUrl = imageUrl,
                                     localizedDisplayClassification = productResponse.localizedClassification,
                                     storeDisplayClassification = productResponse.storeDisplayClassification,
-                                    storeIdInProduct = input.storeId
+                                    storeIdInProduct = input.storeId.storeId
                                 )
                                 productDao.insertProduct(product)
 
@@ -158,7 +171,7 @@ class UpdatePriceRepository @Inject constructor(
                                 }
                             }
 
-                            if (!priceDao.hasPrice(productId = productResponse.id, dealId = input.dealId)) {
+                            if (!priceDao.hasPrice(productId = productResponse.id, dealId = input.dealId.dealId)) {
                                 val priceResponse = productResponse.price
                                 val basePriceList = priceResponse.basePrice.split("\$")
                                 val discountedPriceList = priceResponse.discountedPrice.split("\$")
@@ -170,7 +183,7 @@ class UpdatePriceRepository @Inject constructor(
                                     val isTiedToSubscription = priceResponse.isTiedToSubscription ?: false
                                     val price = PriceHistory(
                                         productIdPriceRef = productResponse.id,
-                                        dealIdPriceRef = input.dealId,
+                                        dealIdPriceRef = input.dealId.dealId,
                                         unit = unit,
                                         basePrice = basePrice,
                                         discountedPrice = discountedPrice,
@@ -178,7 +191,7 @@ class UpdatePriceRepository @Inject constructor(
                                         isFree = priceResponse.isFree,
                                         isExclusive = priceResponse.isExclusive,
                                         isTiedToSubscription = isTiedToSubscription,
-                                        storeIdInPriceHistory = input.storeId
+                                        storeIdInPriceHistory = input.storeId.storeId
                                     )
                                     priceDao.insertPriceHistory(price)
                                 }
@@ -205,12 +218,26 @@ class UpdatePriceRepository @Inject constructor(
             Timber.e("on parse exception ${throwable}")
         }
 
+    }*/
+
+    suspend fun loadTotalCountInDeal(
+        storeId: String, dealId: String
+    ): Result<Int> {
+        val url = "$BASE_URL${storeId}/category/${dealId}${SLASH_SIGN}1"
+        try {
+            val headers = HashMap<String, String>()
+            val params = HashMap<String, String>()
+            val responseBody = apiDataSource.downloadFile(
+                url = url,
+                params = params,
+                headers = headers
+            )
+        //    processResponse(responseBody.string())
+            return Result.success(0)
+        } catch (throwable: Throwable) {
+            return Result.failure(throwable)
+        }
     }
 
 }
 
-data class UpdatePriceInput(
-    val dealId: String,
-    val storeId: String,
-    val pageIndex: Int
-)

@@ -1,6 +1,7 @@
 package com.waldemartech.psstorage.data.local.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -160,6 +161,10 @@ interface ProductDao {
         offset: Int
     ) : List<ProductDetailData>
 
+    @Query("SELECT * FROM product WHERE productId IN (SELECT favoriteProductId FROM favorite_product) AND storeIdInProduct == :storeId")
+    suspend fun loadAllFavoriteProduct(
+        storeId: String,
+    ) : List<ProductDetailData>
 
     @Query("SELECT * FROM product WHERE productId IN (SELECT ignoredProductId FROM ignored_product) AND storeIdInProduct == :storeId LIMIT :limit OFFSET :offset")
     suspend fun loadIgnoredByPage(
@@ -168,10 +173,23 @@ interface ProductDao {
         offset: Int
     ) : List<ProductDetailData>
 
+    @Query("SELECT * FROM product WHERE productId IN (SELECT ignoredProductId FROM ignored_product) AND storeIdInProduct == :storeId")
+    suspend fun loadAllIgnoredProduct(
+        storeId: String,
+    ) : List<ProductDetailData>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertFavoriteProduct(item: FavoriteProduct)
 
+    @Query("DELETE FROM favorite_product WHERE favoriteProductId = :productId")
+    suspend fun deleteFavoriteProduct(productId: String)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertIgnoredProduct(item: IgnoredProduct)
+
+    @Query("DELETE FROM ignored_product WHERE ignoredProductId = :productId")
+    suspend fun deleteIgnoredProduct(productId: String)
+
+
 
 }

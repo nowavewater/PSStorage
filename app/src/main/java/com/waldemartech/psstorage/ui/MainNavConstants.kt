@@ -11,6 +11,8 @@ object MainNavConstants {
 
     const val DEST_STORE_DETAIL = "store_detail"
 
+    const val DEST_TOOL_LIST = "tool_list"
+
     const val DEST_DEAL_LIST = "deal_list"
 
     const val DEST_DEAL_DETAIL = "deal_detail"

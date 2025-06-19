@@ -1,7 +1,5 @@
 package com.waldemartech.psstorage.data.store
 
-import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlHandler
-import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
 import com.waldemartech.psstorage.data.api.ApiConstants.BASE_URL
 import com.waldemartech.psstorage.data.api.ApiConstants.EXCLUDED_LOCALIZED_NAME
 import com.waldemartech.psstorage.data.api.ApiConstants.HTML_ATTRIBUTE_NAME_CLASS
@@ -19,13 +17,12 @@ import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_DEAL_LINK_CLASS
 import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_KEY_WORD_VIEW
 import com.waldemartech.psstorage.data.api.ApiDataSource
 import com.waldemartech.psstorage.data.local.database.table.Deal
-import com.waldemartech.psstorage.data.store.DealConstants.processResponse
-import com.waldemartech.psstorage.data.store.DealConstants.processText
+import com.waldemartech.psstorage.data.store.DealConstants.processDealResponse
+import com.waldemartech.psstorage.data.store.DealConstants.processDealText
 import com.waldemartech.psstorage.data.store.entity.DealUpdateResult
 import com.waldemartech.psstorage.data.store.entity.SubDealData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -63,7 +60,7 @@ class UpdateDealRepository @Inject constructor(
                 watchingState = ProcessState.Text(
                     onText = { text ->
                         Timber.i("on deal $text")
-                        processText(
+                        processDealText(
                             text = text,
                             watchingKey = IMAGE_COMPONENT,
                             onDealResponse = { dealResponse ->
@@ -127,12 +124,12 @@ class UpdateDealRepository @Inject constructor(
 
             val responseText = responseBody.string()
 
-            processResponse(
+            processDealResponse(
                 control = control,
                 response = responseText,
             )
 
-            processResponse(
+            processDealResponse(
                 control = subControl,
                 response = responseText,
             )
@@ -145,6 +142,8 @@ class UpdateDealRepository @Inject constructor(
 
         return DealUpdateResult(dealList, subDealList)
     }
+
+
 
 }
 

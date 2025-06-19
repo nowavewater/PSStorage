@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.waldemartech.psstorage.R
+import com.waldemartech.psstorage.data.store.StoreId
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_DEAL_DETAIL
 import com.waldemartech.psstorage.ui.MainNavConstants.navigateDouble
 import com.waldemartech.psstorage.ui.widget.base.theme.LocalNavController
@@ -24,7 +25,7 @@ import timber.log.Timber
 
 @Composable
 fun DealListScreen(
-    storeId: String,
+    storeId: StoreId,
     dealListViewModel: DealListViewModel = hiltViewModel()
 ) {
     val navController = LocalNavController.current
@@ -48,7 +49,7 @@ fun DealListScreen(
                 contentDescription = null,
                 modifier = Modifier.fillMaxWidth()
                     .clickable {
-                        navController.navigateDouble(DEST_DEAL_DETAIL, storeId, deal.dealId)
+                        navController.navigateDouble(DEST_DEAL_DETAIL, storeId.storeId, deal.dealId)
                     }
             )
         }

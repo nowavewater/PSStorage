@@ -9,6 +9,11 @@ object SharedConstants {
     const val SLASH_SIGN = "/"
 
     const val LEFT_BRACE = "{"
+
     const val RIGHT_BRACE = "}"
+
+    const val UNDER_SCORE = "_"
+
+    const val COLON_SIGN = ":"
 
 }

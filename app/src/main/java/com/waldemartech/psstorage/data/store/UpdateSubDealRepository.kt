@@ -8,8 +8,8 @@ import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_DEAL_ID
 import com.waldemartech.psstorage.data.api.ApiConstants.TEXT_COMPONENT
 import com.waldemartech.psstorage.data.api.ApiDataSource
 import com.waldemartech.psstorage.data.local.database.table.Deal
-import com.waldemartech.psstorage.data.store.DealConstants.processResponse
-import com.waldemartech.psstorage.data.store.DealConstants.processText
+import com.waldemartech.psstorage.data.store.DealConstants.processDealResponse
+import com.waldemartech.psstorage.data.store.DealConstants.processDealText
 import com.waldemartech.psstorage.data.store.entity.SubDealData
 import timber.log.Timber
 import javax.inject.Inject
@@ -43,7 +43,7 @@ class UpdateSubDealRepository @Inject constructor(
                 ),
                 watchingState = ProcessState.Text(
                     onText = { text ->
-                        processText(
+                        processDealText(
                             text = text,
                             watchingKey = TEXT_COMPONENT,
                             onDealResponse = { dealResponse ->
@@ -69,7 +69,7 @@ class UpdateSubDealRepository @Inject constructor(
 
             val responseText = responseBody.string()
 
-            processResponse(
+            processDealResponse(
                 control = control,
                 response = responseText,
             )

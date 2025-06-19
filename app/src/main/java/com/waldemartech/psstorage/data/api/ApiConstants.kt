@@ -36,8 +36,9 @@ object ApiConstants {
 
     const val TEXT_COMPONENT = "EMSTextComponent"
 
-    const val LINK_TYPE_VIEW = "EMS_VIEW"
+    const val CATEGORY_GRID_COMPONENT = "CategoryGrid"
 
+    const val LINK_TYPE_VIEW = "EMS_VIEW"
 
     val EXCLUDED_LOCALIZED_NAME = setOf(
         "cat.gma.PlayStation_VR2_Games",

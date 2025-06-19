@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.waldemartech.psstorage.data.store.StoreId
 import com.waldemartech.psstorage.domain.store.LoadDealUseCase
 import com.waldemartech.psstorage.ui.widget.entity.DealWidgetData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +22,7 @@ class DealListViewModel @Inject constructor(
     private val _dealList = mutableStateListOf<DealWidgetData>()
     fun dealList(): SnapshotStateList<DealWidgetData> = _dealList
 
-    suspend fun loadDeals(storeId: String) {
+    suspend fun loadDeals(storeId: StoreId) {
         viewModelScope.launch(Dispatchers.IO) {
             _dealList.clear()
             Timber.i("on load deal")

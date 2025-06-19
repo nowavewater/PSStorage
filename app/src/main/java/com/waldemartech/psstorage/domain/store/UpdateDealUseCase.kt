@@ -6,6 +6,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.waldemartech.psstorage.data.local.database.dao.DealDao
+import com.waldemartech.psstorage.data.local.database.dao.ProductDao
 import com.waldemartech.psstorage.data.local.database.table.CurrentDeal
 import com.waldemartech.psstorage.data.store.StoreConstants.DEAL_ID_KEY
 import com.waldemartech.psstorage.data.store.StoreConstants.PAGE_INDEX_KEY
@@ -13,6 +14,7 @@ import com.waldemartech.psstorage.data.store.StoreConstants.STORE_ID_KEY
 import com.waldemartech.psstorage.data.store.StoreData
 import com.waldemartech.psstorage.data.store.UpdateSubDealRepository
 import com.waldemartech.psstorage.data.store.UpdateDealRepository
+import com.waldemartech.psstorage.data.store.UpdatePriceRepository
 import com.waldemartech.psstorage.data.store.UpdatePriceWorker
 import dagger.hilt.android.qualifiers.ApplicationContext
 import timber.log.Timber
@@ -22,7 +24,9 @@ import javax.inject.Inject
 class UpdateDealUseCase @Inject constructor(
     @ApplicationContext private val context: Context,
     private val dealDao: DealDao,
+    private val productDao: ProductDao,
     private val updateDealRepository: UpdateDealRepository,
+    private val updatePriceRepository: UpdatePriceRepository,
     private val updateSubDealRepository: UpdateSubDealRepository
 ) {
 
@@ -49,6 +53,15 @@ class UpdateDealUseCase @Inject constructor(
 
     private suspend fun launchUpdatePriceWorker(storeData: StoreData) {
         var delay = 1L
+        /*val dealsRequireUpdate = dealDao.loadCurrentDealsByStore(storeData.storeId).filter { deal ->
+            val countInDatabase = productDao.loadAllProductInDealCount(
+                storeId = storeData.storeId,
+                dealId = deal.deal.dealId
+            )
+            val countTotal = updatePriceRepository.loadTotalCountInDeal(
+                storeData = storeData
+            )
+        }*/
         dealDao.loadCurrentDealsByStore(storeData.storeId).forEach { deal ->
             val inputData = Data.Builder()
                 .putString(STORE_ID_KEY, storeData.storeId)
@@ -60,6 +73,7 @@ class UpdateDealUseCase @Inject constructor(
                     .setInitialDelay(delay, TimeUnit.MINUTES)
                     .setInputData(inputData)
                     .build()
+
             WorkManager.getInstance(context).enqueue(updateDealWorkRequest)
             delay += 10L
         }

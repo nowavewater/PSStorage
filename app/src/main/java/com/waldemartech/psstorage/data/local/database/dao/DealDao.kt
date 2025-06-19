@@ -16,8 +16,8 @@ interface DealDao {
     @Query("SELECT * FROM current_deal WHERE storeIdInCurrentDeal == :storeId")
     suspend fun loadCurrentDealsByStore(storeId: String): List<CurrentDealData>
 
-    @Query("SELECT EXISTS(SELECT 1 FROM deal WHERE dealId == :id)")
-    suspend fun hasDeal(id: String) : Boolean
+    @Query("SELECT EXISTS(SELECT 1 FROM deal WHERE dealId == :dealId)")
+    suspend fun hasDeal(dealId: String) : Boolean
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDeal(item: Deal)

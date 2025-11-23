@@ -10,12 +10,12 @@ class RemoveDuplicatedUseCase @Inject constructor(
     suspend operator fun invoke(storeId: String) {
         val favoriteMap = mutableMapOf<String, ProductDetailData>()
         productDao.loadAllFavoriteProduct(storeId).forEach { favoriteProduct ->
-            favoriteMap[favoriteProduct.uniqueId()] = favoriteProduct
+            favoriteMap[favoriteProduct.product.productId] = favoriteProduct
         }
         val duplicatedList = mutableListOf<ProductDetailData>()
         val ignoredList = productDao.loadAllIgnoredProduct(storeId)
         ignoredList.forEach { ignoredProduct ->
-            if(favoriteMap.contains(ignoredProduct.uniqueId())) {
+            if(favoriteMap.contains(ignoredProduct.product.productId)) {
                 duplicatedList.add(ignoredProduct)
             }
         }

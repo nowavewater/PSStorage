@@ -5,6 +5,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
+import com.waldemartech.psstorage.data.base.SharedConstants.COLON_SIGN
 import com.waldemartech.psstorage.data.local.database.dao.DealDao
 import com.waldemartech.psstorage.data.local.database.dao.ProductDao
 import com.waldemartech.psstorage.data.local.database.table.CurrentDeal
@@ -24,14 +25,12 @@ import javax.inject.Inject
 class UpdateDealUseCase @Inject constructor(
     @ApplicationContext private val context: Context,
     private val dealDao: DealDao,
-    private val productDao: ProductDao,
     private val updateDealRepository: UpdateDealRepository,
-    private val updatePriceRepository: UpdatePriceRepository,
     private val updateSubDealRepository: UpdateSubDealRepository
 ) {
 
     suspend operator fun invoke(storeData: StoreData) {
-        dealDao.clearAllCurrentDeals()
+        dealDao.clearStoreCurrentDeals(storeData.storeId)
         val result = updateDealRepository.updateDeal(storeData)
         Timber.i("result is $result")
         val finalDealList = result.subDealList.map { subDeal ->
@@ -43,10 +42,12 @@ class UpdateDealUseCase @Inject constructor(
         } + result.dealList
 
         finalDealList.forEach { deal ->
-            if (!dealDao.hasDeal(deal.dealId)) {
-                dealDao.insertDeal(deal)
+            val dealId = deal.dealId
+            val updatedDeal = deal.copy(dealId = dealId)
+            if (!dealDao.hasDeal(dealId)) {
+                dealDao.insertDeal(updatedDeal)
             }
-            dealDao.insertCurrentDeal(CurrentDeal(deal.dealId, storeIdInCurrentDeal = storeData.storeId))
+            dealDao.insertCurrentDeal(CurrentDeal(dealId, storeIdInCurrentDeal = storeData.storeId))
         }
         launchUpdatePriceWorker(storeData)
     }
@@ -62,15 +63,16 @@ class UpdateDealUseCase @Inject constructor(
                 storeData = storeData
             )
         }*/
-        dealDao.loadCurrentDealsByStore(storeData.storeId).forEach { deal ->
+        dealDao.loadCurrentDealsByStore(storeData.storeId).forEach { currentDeal ->
+            var pageIndex = currentDeal.deal.currentPageIndex
+
             val inputData = Data.Builder()
                 .putString(STORE_ID_KEY, storeData.storeId)
-                .putInt(PAGE_INDEX_KEY, 1)
-                .putString(DEAL_ID_KEY, deal.deal.dealId)
+                .putInt(PAGE_INDEX_KEY, pageIndex)
+                .putString(DEAL_ID_KEY, currentDeal.deal.dealId)
                 .build()
             val updateDealWorkRequest: WorkRequest =
                 OneTimeWorkRequestBuilder<UpdatePriceWorker>()
-                    .setInitialDelay(delay, TimeUnit.MINUTES)
                     .setInputData(inputData)
                     .build()
 

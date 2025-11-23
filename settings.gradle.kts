@@ -28,6 +28,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "MyApp"
+rootProject.name = "PSStore"
 
 include(":app")

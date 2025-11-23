@@ -3,6 +3,7 @@ package com.waldemartech.psstorage.ui.tool
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,19 @@ fun ToolMenuScreen(
         }
     }
 
+    // Launcher for opening a single document
+    val openDocumentLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = { uri: Uri? ->
+            if (uri != null) {
+                toolMenuViewModel.importData(uri)
+            } else {
+                // User cancelled the file selection
+                Toast.makeText(context, "File selection cancelled", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -53,7 +67,7 @@ fun ToolMenuScreen(
         HeightSpacer()
 
         JellyButton(text = "Export") {
-        // 创建一个 Intent 来创建文档
+            // 创建一个 Intent 来创建文档
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 type = "text/plain" // 设置 MIME 类型，例如：纯文本
@@ -67,16 +81,12 @@ fun ToolMenuScreen(
         HeightSpacer()
 
         JellyButton(text = "Import") {
-            // 创建一个 Intent 来创建文档
-            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "text/plain" // 设置 MIME 类型，例如：纯文本
-                putExtra(Intent.EXTRA_TITLE, "ps_store_backup.json") // 默认文件名
-                // 提示：你不能直接指定到 Documents 文件夹，
-                // 用户会在文件选择器中导航到他们想要的位置。
-                // 但系统通常会把 Documents 或 Downloads 作为常见选项。
-            }
-            createFileLauncher.launch(intent) // 启动文件创建 Intent
+            openDocumentLauncher.launch(
+                arrayOf(
+                    "text/plain",
+                    "application/json"
+                )
+            ) // Example: Text or JSON files        }
         }
     }
 

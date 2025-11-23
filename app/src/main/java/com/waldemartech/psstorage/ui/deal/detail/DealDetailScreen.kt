@@ -41,6 +41,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
+import com.waldemartech.psstorage.ui.widget.base.theme.ItemHeightSpacer
 import com.waldemartech.psstorage.ui.widget.button.HeightSpacer
 import com.waldemartech.psstorage.ui.widget.button.JellyButton
 import com.waldemartech.psstorage.ui.widget.button.SmallOrionButton
@@ -158,23 +159,21 @@ fun DealDetailScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Text(text = dealDetailViewModel.totalItemCount().value.toString())
+
             Row(
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(text = dealDetailViewModel.totalItemCount().value.toString())
-                Spacer(modifier = Modifier.width(16.dp))
+                verticalAlignment = Alignment.CenterVertically) {
+
                 Text(text = dealDetailViewModel.filterMode.value.text)
+                Spacer(modifier = Modifier.width(16.dp))
+                Icon(
+                    imageVector = FilterListIcon,
+                    contentDescription = null,
+                    modifier = Modifier.clickable {
+                        showPopupMenu = true
+                    }
+                )
             }
-
-
-
-            Icon(
-                imageVector = FilterListIcon,
-                contentDescription = null,
-                modifier = Modifier.clickable {
-                    showPopupMenu = true
-                }
-            )
         }
         ItemHeightSpacer()
 
@@ -338,11 +337,6 @@ fun ProductPriceItemView(item: ProductPriceItemData, onLongClick:() -> Unit) {
         }
     }
 
-}
-
-@Composable
-private fun ItemHeightSpacer() {
-    Spacer(modifier = Modifier.height(4.dp))
 }
 
 @Composable

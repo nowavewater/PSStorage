@@ -17,5 +17,7 @@
 
 <resources>
 
-    <style name="Theme.MyApp" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.PSStore" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
 </resources>

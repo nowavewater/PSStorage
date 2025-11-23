@@ -9,6 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_DEAL_LIST
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_FAVORITE_LIST
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_IGNORED_LIST
+import com.waldemartech.psstorage.ui.MainNavConstants.DEST_PLATFORM_FILTER
 import com.waldemartech.psstorage.ui.MainNavConstants.navigateSingle
 import com.waldemartech.psstorage.ui.widget.button.HeightSpacer
 import com.waldemartech.psstorage.ui.widget.button.JellyButton
@@ -36,6 +37,10 @@ fun StoreDetailScreen(
         HeightSpacer()
         JellyButton(text = "Ignored") {
             navController.navigateSingle(DEST_IGNORED_LIST, storeId)
+        }
+        HeightSpacer()
+        JellyButton(text = "Platform Filter") {
+            navController.navigateSingle(DEST_PLATFORM_FILTER, storeId)
         }
         HeightSpacer()
         JellyButton(text = "Sync") {

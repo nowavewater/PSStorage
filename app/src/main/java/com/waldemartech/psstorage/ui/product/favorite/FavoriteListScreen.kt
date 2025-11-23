@@ -1,25 +1,24 @@
 package com.waldemartech.psstorage.ui.product.favorite
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.waldemartech.psstorage.ui.widget.button.SmallOrionButton
+import com.waldemartech.psstorage.ui.widget.button.JellyButton
+import com.waldemartech.psstorage.ui.widget.entity.ProductItemData
+import com.waldemartech.psstorage.ui.widget.item.PSStoreProductListView
 import com.waldemartech.psstorage.ui.widget.item.ProductItemView
+import com.waldemartech.psstorage.ui.widget.item.ProductListConfig
+import timber.log.Timber
 
 @Composable
 fun FavoriteListScreen(
@@ -30,39 +29,71 @@ fun FavoriteListScreen(
         favoriteListViewModel.loadFavoriteList(storeId = storeId, pageIndex = 0)
     }
 
-    Column {
-        LazyVerticalGrid(
-            modifier = Modifier.fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 20.dp),
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+    LaunchedEffect(Unit
+    ) {
+        favoriteListViewModel.loadFavoriteCount(storeId = storeId)
+    }
+
+    val currentItem = remember { mutableStateOf<ProductItemData?>(null) }
+
+    val showDialog = remember { mutableStateOf(false) }
+
+    if (showDialog.value) {
+        Timber.i("on show dialog")
+        currentItem.value?.let {
+            Timber.i("on show dialog")
+            OptionDialog(
+                storeId = storeId,
+                item = it,
+                onDismiss = { showDialog.value = false },
+                favoriteListViewModel = favoriteListViewModel
+            )
+        }
+
+    }
+    val config = ProductListConfig(
+        totalItemCount = favoriteListViewModel.totalItemCount().value,
+        currentPage = favoriteListViewModel.currentPage().value,
+        storeId = storeId
+    )
+    PSStoreProductListView(
+        productItemList = favoriteListViewModel.productList(),
+        onPrevious = { favoriteListViewModel.loadPreviousPage(storeId = storeId) },
+        onNext = { favoriteListViewModel.loadNextPage(storeId = storeId) },
+        config = config,
+        itemView = { item ->
+            ProductItemView(
+                item = item,
+                onLongClick = {
+                    currentItem.value = item
+                    showDialog.value = true
+                }
+            )
+        }
+    )
+
+}
+
+@Composable
+private fun OptionDialog(
+    storeId: String,
+    item: ProductItemData,
+    onDismiss: () -> Unit,
+    favoriteListViewModel: FavoriteListViewModel
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(8.dp),
+            color = Color.White
         ) {
-            items(favoriteListViewModel.productList()) { item ->
-                ProductItemView(item)
-            }
-
-            item(span =  { GridItemSpan(2) }) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-
-                    SmallOrionButton("Previous") {
-                        favoriteListViewModel.loadPreviousPage(storeId)
-                    }
-
-                    Spacer(modifier = Modifier.width(20.dp))
-
-                    Text(text = favoriteListViewModel.currentPage().value.toString())
-                    Spacer(modifier = Modifier.width(20.dp))
-
-                    SmallOrionButton("Next") {
-                        favoriteListViewModel.loadNextPage(storeId)
-                    }
+            Column(
+                modifier = Modifier.padding(20.dp)
+            ) {
+                JellyButton(text = "Add to ignored") {
+                    favoriteListViewModel.addToIgnored(storeId, item)
+                    onDismiss()
                 }
             }
         }
     }
-
 }

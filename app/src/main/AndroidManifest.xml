@@ -28,18 +28,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApp"
-        android:name=".MyApp"
+        android:theme="@style/Theme.PSStore"
+        android:name=".PSStoreApp"
         tools:targetApi="31">
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyApp">
+            android:theme="@style/Theme.PSStore">
         </activity>
         <activity
             android:name=".ui.launcher.LauncherActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyApp">
+            android:theme="@style/Theme.PSStore">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

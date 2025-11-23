@@ -3,6 +3,7 @@ package com.waldemartech.psstorage.data.store
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlHandler
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
 import com.waldemartech.psstorage.data.api.entity.DealResponse
+import com.waldemartech.psstorage.data.api.entity.ProductResponse
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import timber.log.Timber
@@ -78,7 +79,7 @@ object DealConstants {
                             /*if (dealLinkMap.contains(dealResponse.link.target)) { 61b9ab7f
 
                                 dealResponse.link.localizedName?.let { localized ->
-                                    dealLinkMap[dealResponse.link.target]?.let { dealLink ->
+                                    dealLinkMa+p[dealResponse.link.target]?.let { dealLink ->
                                         Timber.i("before deal ${dealLink.id} ")
 
                                     }
@@ -93,7 +94,31 @@ object DealConstants {
         }
     }
 
-
+    suspend fun processPriceText(
+        text: String,
+        watchingKey: String,
+        onProductResponse: suspend (ProductResponse) -> Unit
+    ) {
+        try {
+            val json = JSONObject(text)
+            if (json.has("props")) {
+                val props = json.getJSONObject("props")
+                if (props.has("apolloState")) {
+                    val apolloState = props.getJSONObject("apolloState")
+                    apolloState.keys().forEach { key ->
+                        //    Timber.i("key is ${key}")
+                        if (key.contains(watchingKey)) {
+                            //    Timber.i("for each product")
+                            val productResponse = Json{ ignoreUnknownKeys = true }.decodeFromString<ProductResponse>(apolloState.getJSONObject(key).toString())
+                            onProductResponse(productResponse)
+                        }
+                    }
+                }
+            }
+        } catch (throwable: Throwable) {
+            Timber.e("on parse exception ${throwable}")
+        }
+    }
 }
 
 data class ResponseProcessControl(

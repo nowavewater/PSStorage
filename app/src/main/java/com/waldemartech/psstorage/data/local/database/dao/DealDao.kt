@@ -22,10 +22,13 @@ interface DealDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDeal(item: Deal)
 
-    @Query("DELETE FROM current_deal")
-    suspend fun clearAllCurrentDeals()
+    @Query("DELETE FROM current_deal WHERE storeIdInCurrentDeal == :storeId")
+    suspend fun clearStoreCurrentDeals(storeId: String)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCurrentDeal(item: CurrentDeal)
+
+    @Query("UPDATE deal SET currentPageIndex = :pageIndex WHERE dealId = :dealId")
+    suspend fun updateDealPageIndex(dealId: String, pageIndex: Int)
 
 }

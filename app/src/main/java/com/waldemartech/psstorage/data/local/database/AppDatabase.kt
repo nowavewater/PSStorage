@@ -22,6 +22,7 @@ import com.waldemartech.psstorage.data.local.database.dao.DealDao
 import com.waldemartech.psstorage.data.local.database.dao.PlatformDao
 import com.waldemartech.psstorage.data.local.database.dao.PriceDao
 import com.waldemartech.psstorage.data.local.database.dao.ProductDao
+import com.waldemartech.psstorage.data.local.database.table.AllTimeLowPrice
 import com.waldemartech.psstorage.data.local.database.table.CurrentDeal
 import com.waldemartech.psstorage.data.local.database.table.Deal
 import com.waldemartech.psstorage.data.local.database.table.FavoriteProduct
@@ -40,7 +41,8 @@ import com.waldemartech.psstorage.data.local.database.table.ProductPlatformCross
         Product::class,
         ProductPlatformCrossRef::class,
         FavoriteProduct::class,
-        IgnoredProduct::class
+        IgnoredProduct::class,
+        AllTimeLowPrice::class
                ],
     version = 1
 )

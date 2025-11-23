@@ -11,7 +11,7 @@ object MainNavConstants {
 
     const val DEST_STORE_DETAIL = "store_detail"
 
-    const val DEST_TOOL_LIST = "tool_list"
+    const val DEST_TOOL_MENU = "tool_menu"
 
     const val DEST_DEAL_LIST = "deal_list"
 
@@ -25,7 +25,7 @@ object MainNavConstants {
 
     const val DEST_FAVORITE_LIST = "favorite_list"
 
-
+    const val DEST_PLATFORM_FILTER = "platform_filter"
 
     fun buildSingleArgsDest(dest: String, key: String) =
         dest + SLASH_SIGN + LEFT_BRACE + key + RIGHT_BRACE

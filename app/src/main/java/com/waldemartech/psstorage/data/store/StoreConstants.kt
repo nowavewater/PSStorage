@@ -12,6 +12,7 @@ object StoreConstants {
 
     const val US_STORE_ID = "en-us"
 
-
+    const val PLATFORM_PS4 = "ps4"
+    const val PLATFORM_PS5 = "ps5"
 
 }

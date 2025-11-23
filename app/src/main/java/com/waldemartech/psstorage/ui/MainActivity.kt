@@ -35,22 +35,26 @@ import com.waldemartech.psstorage.ui.MainNavConstants.DEST_DEAL_DETAIL
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_DEAL_LIST
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_FAVORITE_LIST
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_IGNORED_LIST
+import com.waldemartech.psstorage.ui.MainNavConstants.DEST_PLATFORM_FILTER
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_PRODUCT_DETAIL
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_PRODUCT_LIST
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_STORE_DETAIL
 import com.waldemartech.psstorage.ui.MainNavConstants.DEST_STORE_LIST
+import com.waldemartech.psstorage.ui.MainNavConstants.DEST_TOOL_MENU
 import com.waldemartech.psstorage.ui.MainNavConstants.buildDoubleArgsDest
 import com.waldemartech.psstorage.ui.MainNavConstants.buildSingleArgsDest
 import dagger.hilt.android.AndroidEntryPoint
-import com.waldemartech.psstorage.ui.widget.base.theme.MyApplicationTheme
+import com.waldemartech.psstorage.ui.widget.base.theme.PSStoreApplicationTheme
 import com.waldemartech.psstorage.ui.deal.detail.DealDetailScreen
 import com.waldemartech.psstorage.ui.deal.list.DealListScreen
 import com.waldemartech.psstorage.ui.product.detail.ProductDetailScreen
 import com.waldemartech.psstorage.ui.product.favorite.FavoriteListScreen
 import com.waldemartech.psstorage.ui.product.ignored.IgnoredListScreen
 import com.waldemartech.psstorage.ui.product.list.ProductListScreen
+import com.waldemartech.psstorage.ui.product.platform.PlatformFilterScreen
 import com.waldemartech.psstorage.ui.store.detail.StoreDetailScreen
 import com.waldemartech.psstorage.ui.store.list.StoreListScreen
+import com.waldemartech.psstorage.ui.tool.ToolMenuScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -61,7 +65,7 @@ class MainActivity : ComponentActivity() {
 
             val navController = rememberNavController()
 
-            MyApplicationTheme(
+            PSStoreApplicationTheme(
                 navController = navController
             ) {
                 Surface(
@@ -93,6 +97,9 @@ class MainActivity : ComponentActivity() {
                             //    val downloadId = backStackEntry.arguments?.getString(DOWNLOAD_ID_KEY)
                             ProductListScreen()
                         }
+                        composable(DEST_TOOL_MENU) {
+                            ToolMenuScreen()
+                        }
                         composable(DEST_PRODUCT_DETAIL) { backStackEntry ->
                             //    val downloadId = backStackEntry.arguments?.getString(DOWNLOAD_ID_KEY)
                             ProductDetailScreen()
@@ -102,11 +109,15 @@ class MainActivity : ComponentActivity() {
                             requireNotNull(storeId)
                             IgnoredListScreen(storeId)
                         }
-
                         composable(buildSingleArgsDest(DEST_FAVORITE_LIST, STORE_ID_KEY)) { backStackEntry ->
                             val storeId = backStackEntry.arguments?.getString(STORE_ID_KEY)
                             requireNotNull(storeId)
                             FavoriteListScreen(storeId)
+                        }
+                        composable(buildSingleArgsDest(DEST_PLATFORM_FILTER, STORE_ID_KEY)) { backStackEntry ->
+                            val storeId = backStackEntry.arguments?.getString(STORE_ID_KEY)
+                            requireNotNull(storeId)
+                            PlatformFilterScreen(StoreId(storeId))
                         }
                     }
                 }

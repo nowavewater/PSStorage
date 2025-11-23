@@ -9,6 +9,7 @@ import com.waldemartech.psstorage.data.base.SharedConstants.EMPTY_STRING
 data class Deal(
     @PrimaryKey val dealId: String,
     val imageUrl: String,
+    val currentPageIndex: Int = 1,
     val localizedName: String = EMPTY_STRING,
     val storeIdInDeal: String
 )

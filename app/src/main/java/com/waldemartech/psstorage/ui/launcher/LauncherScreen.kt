@@ -20,7 +20,6 @@ fun LauncherScreen(
     }
 
     LaunchedEffect(Unit) {
-        delay(5000)
         context.startActivity(Intent(context, MainActivity::class.java))
         (context as ComponentActivity).finish()
     }

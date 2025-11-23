@@ -21,6 +21,4 @@ data class ProductDetailData(
         )
     )
     val platforms: List<Platform>
-) {
-    fun uniqueId(): String = product.productId + UNDER_SCORE + product.storeIdInProduct
-}
+)

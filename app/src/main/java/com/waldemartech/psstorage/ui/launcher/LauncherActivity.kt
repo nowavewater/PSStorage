@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.waldemartech.psstorage.ui.widget.base.theme.MyApplicationTheme
+import com.waldemartech.psstorage.ui.widget.base.theme.PSStoreApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +18,7 @@ class LauncherActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            MyApplicationTheme(
+            PSStoreApplicationTheme(
                 navController = navController
             ) {
                 Surface(

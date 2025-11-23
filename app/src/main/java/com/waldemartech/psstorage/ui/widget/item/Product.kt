@@ -1,7 +1,9 @@
 package com.waldemartech.psstorage.ui.widget.item
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,11 +20,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.waldemartech.psstorage.ui.widget.entity.ProductItemData
+import timber.log.Timber
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ProductItemView(item: ProductItemData) {
+fun ProductItemView(
+    item: ProductItemData,
+    onLongClick: (ProductItemData) -> Unit
+) {
     Column(
-        modifier = Modifier
+        modifier = Modifier.combinedClickable(
+            onLongClick = {
+                Timber.i("on long click")
+                onLongClick(item)
+            },
+            onClick = {
+                Timber.i("on click")
+
+            }
+        )
     ) {
         Box {
             AsyncImage(

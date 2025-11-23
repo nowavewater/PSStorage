@@ -26,19 +26,27 @@ object ApiConstants {
 
     const val PS_STORE_DEAL_ID = "__NEXT_DATA__"
 
-    const val BASE_URL = "https://store.playstation.com/"
+    const val BASE_URL = "https://store.playstation.com"
 
     const val DAYS_OF_PLAY_ALT_TEXT = "Days of Play"
 
     const val DAYS_OF_PLAY_LOCALIZED_NAME = "cat.gma.daysofplay"
 
+    const val SUMMER_SALE_LOCALIZED_NAME = "cat.gma.SummerSale"
+
     const val IMAGE_COMPONENT = "EMSImageComponent"
 
     const val TEXT_COMPONENT = "EMSTextComponent"
 
+    const val PRODUCT_COMPONENT = "Product"
+
     const val CATEGORY_GRID_COMPONENT = "CategoryGrid"
 
     const val LINK_TYPE_VIEW = "EMS_VIEW"
+
+    const val TEXT_SEE_ALL_EN = "See all"
+
+    const val TEXT_SEE_ALL_CN = "查看全部"
 
     val EXCLUDED_LOCALIZED_NAME = setOf(
         "cat.gma.PlayStation_VR2_Games",

@@ -154,6 +154,11 @@ interface ProductDao {
         dealId: String
     ): Int
 
+    @Query("SELECT * FROM product WHERE storeIdInProduct == :storeId")
+    suspend fun loadAllProductByStore(
+        storeId: String
+    ) : List<ProductDetailData>
+
     @Query("SELECT * FROM product WHERE productId IN (SELECT favoriteProductId FROM favorite_product) AND storeIdInProduct == :storeId LIMIT :limit OFFSET :offset")
     suspend fun loadFavoriteByPage(
         storeId: String,
@@ -190,6 +195,19 @@ interface ProductDao {
     @Query("DELETE FROM ignored_product WHERE ignoredProductId = :productId")
     suspend fun deleteIgnoredProduct(productId: String)
 
+    @Query("SELECT COUNT(*) FROM product " +
+            "WHERE productId IN (SELECT favoriteProductId FROM favorite_product) " +
+            "AND storeIdInProduct == :storeId")
+    suspend fun loadTotalFavoriteCount(
+        storeId: String,
+    ): Int
+
+    @Query("SELECT COUNT(*) FROM product " +
+            "WHERE productId IN (SELECT ignoredProductId FROM ignored_product) " +
+            "AND storeIdInProduct == :storeId")
+    suspend fun loadTotalIgnoredCount(
+        storeId: String,
+    ): Int
 
 
 }

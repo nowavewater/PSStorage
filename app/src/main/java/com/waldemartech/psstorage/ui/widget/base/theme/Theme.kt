@@ -33,7 +33,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -58,7 +57,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun MyApplicationTheme(
+fun PSStoreApplicationTheme(
     navController: NavController,
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+

@@ -16,6 +16,7 @@ import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_DEAL_ID
 import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_DEAL_LINK_CLASS
 import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_KEY_WORD_VIEW
 import com.waldemartech.psstorage.data.api.ApiDataSource
+import com.waldemartech.psstorage.data.base.SharedConstants.SLASH_SIGN
 import com.waldemartech.psstorage.data.local.database.table.Deal
 import com.waldemartech.psstorage.data.store.DealConstants.processDealResponse
 import com.waldemartech.psstorage.data.store.DealConstants.processDealText
@@ -37,7 +38,7 @@ class UpdateDealRepository @Inject constructor(
 
         val excludeSet = EXCLUDED_LOCALIZED_NAME
 
-        val url = "$BASE_URL${storeData.storeId}/pages/deals"
+        val url = "$BASE_URL$SLASH_SIGN${storeData.storeId}/pages/deals"
         try {
             val headers = HashMap<String, String>()
             val params = HashMap<String, String>()

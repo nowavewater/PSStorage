@@ -5,7 +5,10 @@ import com.waldemartech.psstorage.data.api.ApiConstants.DAYS_OF_PLAY_LOCALIZED_N
 import com.waldemartech.psstorage.data.api.ApiConstants.HTML_ATTRIBUTE_NAME_ID
 import com.waldemartech.psstorage.data.api.ApiConstants.HTML_TAG_SCRIPT
 import com.waldemartech.psstorage.data.api.ApiConstants.PS_STORE_DEAL_ID
+import com.waldemartech.psstorage.data.api.ApiConstants.SUMMER_SALE_LOCALIZED_NAME
 import com.waldemartech.psstorage.data.api.ApiConstants.TEXT_COMPONENT
+import com.waldemartech.psstorage.data.api.ApiConstants.TEXT_SEE_ALL_CN
+import com.waldemartech.psstorage.data.api.ApiConstants.TEXT_SEE_ALL_EN
 import com.waldemartech.psstorage.data.api.ApiDataSource
 import com.waldemartech.psstorage.data.local.database.table.Deal
 import com.waldemartech.psstorage.data.store.DealConstants.processDealResponse
@@ -33,6 +36,8 @@ class UpdateSubDealRepository @Inject constructor(
                 headers = headers
             )
 
+            val textSet = setOf(TEXT_SEE_ALL_CN, TEXT_SEE_ALL_EN)
+
             val control = ResponseProcessControl(
                 startData = ProcessState.Tag(
                     tagData = TagData(
@@ -49,15 +54,17 @@ class UpdateSubDealRepository @Inject constructor(
                             onDealResponse = { dealResponse ->
                                 dealResponse.link?.let { link ->
                                     link.localizedName?.let { localizedName ->
-                                        if (localizedName == DAYS_OF_PLAY_LOCALIZED_NAME) {
-                                            result = Result.success(
-                                                Deal(
-                                                    dealId = link.target,
-                                                    imageUrl = subDealData.imageUrl,
-                                                    localizedName = localizedName,
-                                                    storeIdInDeal = storeData.storeId
+                                        dealResponse.text?.let { text ->
+                                            if (textSet.contains(text)) {
+                                                result = Result.success(
+                                                    Deal(
+                                                        dealId = link.target,
+                                                        imageUrl = subDealData.imageUrl,
+                                                        localizedName = localizedName,
+                                                        storeIdInDeal = storeData.storeId
+                                                    )
                                                 )
-                                            )
+                                            }
                                         }
                                     }
                                 }
